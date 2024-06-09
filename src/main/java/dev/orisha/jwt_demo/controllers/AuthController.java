@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -42,8 +43,8 @@ public class AuthController {
         return ResponseEntity.status(CREATED).body(userService.register(registerRequest));
     }
 
-    @PatchMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Validated @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok().body(userService.login(loginRequest));
     }
 }

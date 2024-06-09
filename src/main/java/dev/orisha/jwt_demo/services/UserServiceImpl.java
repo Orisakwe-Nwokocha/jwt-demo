@@ -8,6 +8,11 @@ import dev.orisha.jwt_demo.dto.requests.RegisterRequest;
 import dev.orisha.jwt_demo.dto.responses.RegisterResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -31,6 +36,10 @@ public class UserServiceImpl implements UserService {
 
     private final JwtEncoder jwtEncoder;
 
+    private final AuthenticationManager authenticationManager;
+
+    private final TokenService tokenService;
+
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -47,7 +56,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByUsername(loginRequest.getUsername())
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+            UserDetails user = (UserDetails) authentication.getPrincipal();
+            System.out.println("user object: "+user);
+
+            String token = tokenService.generateToken(authentication);
+            var response = modelMapper.map(user, LoginResponse.class);
+            response.setMessage("Login successful");
+            response.setToken(token);
+            return response;
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Invalid username or password");
+        }
+
+
+ /*       User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(()-> new RuntimeException("Invalid username or password"));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -57,9 +83,7 @@ public class UserServiceImpl implements UserService {
         var response = modelMapper.map(user, LoginResponse.class);
         response.setToken(generateToken(user));
         response.setMessage("Login successful");
-        return response;
-
-
+        return response;*/
     }
 
 

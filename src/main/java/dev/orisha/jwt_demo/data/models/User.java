@@ -3,6 +3,7 @@ package dev.orisha.jwt_demo.data.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "users")
 @Getter
 @Setter
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = IDENTITY)
