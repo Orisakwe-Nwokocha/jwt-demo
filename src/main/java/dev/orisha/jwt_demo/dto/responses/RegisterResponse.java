@@ -14,5 +14,4 @@ public class RegisterResponse {
     private String username;
     private Set<String> roles;
     private String message;
-    private String token;
 }

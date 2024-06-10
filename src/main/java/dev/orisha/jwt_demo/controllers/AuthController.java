@@ -4,7 +4,7 @@ import dev.orisha.jwt_demo.dto.requests.LoginRequest;
 import dev.orisha.jwt_demo.dto.responses.LoginResponse;
 import dev.orisha.jwt_demo.dto.requests.RegisterRequest;
 import dev.orisha.jwt_demo.dto.responses.RegisterResponse;
-import dev.orisha.jwt_demo.services.TokenService;
+import dev.orisha.jwt_demo.services.security.TokenService;
 
 import dev.orisha.jwt_demo.services.UserService;
 import lombok.AllArgsConstructor;
@@ -32,9 +32,9 @@ public class AuthController {
 
     @PostMapping("/token")
     public String token(Authentication authentication) {
-        LOG.debug("Token requested for user: '{}'", authentication.getName());
+        LOG.info("Token requested for user: '{}'", authentication.getName());
         String token = tokenService.generateToken(authentication);
-        LOG.debug("Token granted: {}", token);
+        LOG.info("Token granted: {}", token);
         return token;
     }
 

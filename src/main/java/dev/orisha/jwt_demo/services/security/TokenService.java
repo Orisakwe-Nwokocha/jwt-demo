@@ -1,4 +1,4 @@
-package dev.orisha.jwt_demo.services;
+package dev.orisha.jwt_demo.services.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +26,6 @@ public class TokenService {
         String roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(", "));
-        System.out.println("roles: "+roles);
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)

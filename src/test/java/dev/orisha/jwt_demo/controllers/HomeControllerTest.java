@@ -1,11 +1,9 @@
 package dev.orisha.jwt_demo.controllers;
 
-import dev.orisha.jwt_demo.config.SecurityConfig;
-import dev.orisha.jwt_demo.services.TokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -16,8 +14,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest({HomeController.class, AuthController.class})
-@Import({SecurityConfig.class, TokenService.class})
+//@WebMvcTest({HomeController.class, AuthController.class})
+//@Import({SecurityConfig.class, TokenService.class})
+@SpringBootTest
+@AutoConfigureMockMvc
 public class HomeControllerTest {
 
     @Autowired
@@ -31,8 +31,8 @@ public class HomeControllerTest {
 
     @Test
     public void rootWhenAuthenticatedThenSaysHelloUser() throws Exception {
-        MvcResult result = mvc.perform(post("/token")
-                        .with(httpBasic("orisha", "password")))
+        MvcResult result = mvc.perform(post("/api/v1/auth/token")
+                        .with(httpBasic("sas", "as")))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -40,7 +40,7 @@ public class HomeControllerTest {
 
         mvc.perform(get("/")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(content().string("Hello, orisha"));
+                .andExpect(content().string("Hello, sas"));
     }
 
     @Test
